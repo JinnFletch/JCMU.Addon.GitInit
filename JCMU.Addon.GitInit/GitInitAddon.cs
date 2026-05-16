@@ -9,41 +9,36 @@ public class GitInitAddon : IJcmuAddon
 {
     public async Task<Maybe> ExecuteAsync(ActionContext context)
     {
+        var request = CommandBuilder.Create("git").WithArgument("init").InDirectory(context.TargetDirectory).Build();
+
         var logger = context.HostServices.Logger;
-        logger.LogInfo($"Starting 'git init' at: {context.TargetDirectory}");
-
-        // 1. Build the command request targeting the folder the user right-clicked on
-        var request = CommandBuilder.Create("git")
-            .WithArgument("init")
-            .InDirectory(context.TargetDirectory)
-            .Build();
-
-        // 2. Instantiate the stateless runner
         var runner = new StatelessRunner();
-
-        // 3. Execute the command and process the result
         return await runner.RunBufferedAsync(request)
-            .BindAsync(cmdResult =>
+            .BindAsync(result =>
             {
-                // ExitCode 0 means the OS successfully executed git init
-                if (cmdResult.ExitCode == 0)
+                if (result.ExitCode == 0)
+                    return Maybe.SUCCESS;
+
+                var errorMsg = string.IsNullOrWhiteSpace(result.StandardError)
+                    ? result.StandardOutput
+                    : result.StandardError;
+
+                if (string.IsNullOrWhiteSpace(errorMsg))
+                    errorMsg = $"Process exited with code {result.ExitCode} but provided no output.";
+
+                return Maybe.Fail(errorMsg);
+            })
+            .TapAsync(
+                async success =>
                 {
-                    logger.LogInfo(cmdResult.StandardOutput);
-
-                    // We wait for a moment just so the user can read the success message 
-                    // before the console window automatically closes.
-                    Thread.Sleep(1500);
-
-                    return Task.FromResult(Maybe.SUCCESS);
-                }
-
-                // If git failed (e.g., git is not installed, or permission denied)
-                var errorMsg = string.IsNullOrWhiteSpace(cmdResult.StandardError)
-                    ? cmdResult.StandardOutput
-                    : cmdResult.StandardError;
-
-                logger.LogError($"Git failed (Exit Code {cmdResult.ExitCode}): {errorMsg}");
-                return Task.FromResult(Maybe.Fail(errorMsg));
-            }).ConfigureAwait(false);
+                    logger.LogInfo("Git initialized successfully.");
+                    await Task.Delay(1500).ConfigureAwait(false);
+                },
+                async failure =>
+                {
+                    logger.LogError($"Git execution failed: {failure.Message}");
+                    await Task.Delay(3000).ConfigureAwait(false);
+                })
+            .ConfigureAwait(false);
     }
 }

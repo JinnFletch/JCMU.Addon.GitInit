@@ -1,0 +1,8 @@
+{
+  "AddonId": "JCMU.Addon.GitInit",
+  "DisplayName": "Git Initializer",
+  "Version": "1.0.0",
+  "Author": "JinnDev",
+  "Description": "Initializes an empty Git repository in the targeted folder.",
+  "MinCoreVersion": "1.0.0"
+}

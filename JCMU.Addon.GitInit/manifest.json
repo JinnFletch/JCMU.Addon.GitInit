@@ -1,10 +1,10 @@
 {
   "AddonId": "JCMU.Addon.GitInit",
   "DisplayName": "Git Init",
-  "Version": "1.0.3",
+  "Version": "1.0.4",
   "Author": "JinnFletch",
   "Menu": {
-    "MenuItemName": "Initialize a Git Repository in the target folder",
+    "MenuItemName": "Git Init in this Folder",
     "Ordinal": 10,
     "Category": "Git Tools",
     "RunInBackground": false,

@@ -35,7 +35,7 @@ public class GitInitAddon : IJcmuAddon
         {
             MenuItemName = "Initialize Git Repository",
             Ordinal = 10,
-            Placement = MenuPlacement.GitTools,
+            Category = "Git Tools",
             RunInBackground = false,
             SubItems = null
         });

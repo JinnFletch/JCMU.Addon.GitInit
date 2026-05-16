@@ -14,7 +14,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JinnDev.JCMU.SDK" Version="1.0.1" />
+		<PackageReference Include="JinnDev.JCMU.SDK" Version="1.0.2" />
 		<PackageReference Include="JinnDev.Utilities.CommandLine" Version="8.0.1" />
 	</ItemGroup>
 

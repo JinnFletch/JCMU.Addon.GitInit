@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using JinnDev.JCMU.SDK.Interfaces;
+﻿using JinnDev.JCMU.SDK.Interfaces;
 using JinnDev.JCMU.SDK.Models;
 using JinnDev.Utilities.Monad;
 using JinnDev.Utilities.CommandLine;
@@ -8,43 +7,10 @@ namespace JinnDev.JCMU.Addon.GitInit;
 
 public class GitInitAddon : IJcmuAddon
 {
-    public Maybe<PluginManifest> GetManifest()
-    {
-        return Maybe.Try<PluginManifest>(() =>
-        {
-            var assemblyLocation = typeof(GitInitAddon).Assembly.Location;
-            var pluginDirectory = Path.GetDirectoryName(assemblyLocation)
-                                  ?? throw new Exception("Could not determine plugin directory.");
-
-            var manifestPath = Path.Combine(pluginDirectory, "manifest.json");
-
-            if (!File.Exists(manifestPath))
-                throw new FileNotFoundException($"Manifest not found at {manifestPath}");
-
-            var json = File.ReadAllText(manifestPath);
-            var manifest = JsonSerializer.Deserialize<PluginManifest>(json)
-                           ?? throw new Exception("Failed to deserialize manifest.json");
-
-            return manifest;
-        });
-    }
-
-    public Maybe<MenuDefinition> GetMenuRegistration()
-    {
-        return Maybe.Some(new MenuDefinition
-        {
-            MenuItemName = "Initialize Git Repository",
-            Ordinal = 10,
-            Category = "Git Tools",
-            RunInBackground = false,
-            SubItems = null
-        });
-    }
-
     public async Task<Maybe> ExecuteAsync(ActionContext context)
     {
         var logger = context.HostServices.Logger;
-        logger.LogInfo($"Starting 'git init' in: {context.TargetDirectory}");
+        logger.LogInfo($"Starting 'git init' at: {context.TargetDirectory}");
 
         // 1. Build the command request targeting the folder the user right-clicked on
         var request = CommandBuilder.Create("git")

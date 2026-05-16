@@ -1,8 +1,13 @@
 {
   "AddonId": "JCMU.Addon.GitInit",
-  "DisplayName": "Git Initializer",
-  "Version": "1.0.0",
-  "Author": "JinnDev",
-  "Description": "Initializes an empty Git repository in the targeted folder.",
-  "MinCoreVersion": "1.0.0"
+  "DisplayName": "Git Init",
+  "Version": "1.0.3",
+  "Author": "JinnFletch",
+  "Menu": {
+    "MenuItemName": "Initialize a Git Repository in the target folder",
+    "Ordinal": 10,
+    "Category": "Git Tools",
+    "RunInBackground": false,
+    "SubItems": null
+  }
 }

@@ -22,7 +22,7 @@ Because JCMU uses GitHub as its decentralized App Store, you can install this ad
 Open your terminal and run:
 
 ```bash
-jcmu install <YourGitHubUsername>/JCMU.Addon.GitInit
+jcmu install JinnFletch/JCMU.Addon.GitInit
 ```
 
 The JCMU Core will automatically:

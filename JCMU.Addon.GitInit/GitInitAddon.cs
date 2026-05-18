@@ -7,7 +7,7 @@ namespace JinnDev.JCMU.Addon.GitInit;
 
 public class GitInitAddon : IJcmuAddon
 {
-    public async Task<Maybe> ExecuteAsync(ActionContext context)
+    public async Task<Maybe<int>> ExecuteAsync(ActionContext context)
     {
         var request = CommandBuilder.Create("git").WithArgument("init").InDirectory(context.TargetDirectory).Build();
 
@@ -39,6 +39,7 @@ public class GitInitAddon : IJcmuAddon
                     logger.LogError($"Git execution failed: {failure.Message}");
                     await Task.Delay(3000).ConfigureAwait(false);
                 })
+            .WithValueAsync(() => 0)
             .ConfigureAwait(false);
     }
 }

@@ -1,7 +1,7 @@
 {
   "AddonId": "JCMU.Addon.GitInit",
   "DisplayName": "Git Init",
-  "Version": "1.0.4",
+  "Version": "1.2.0",
   "Author": "JinnFletch",
   "Menu": {
     "MenuItemName": "Git Init in this Folder",

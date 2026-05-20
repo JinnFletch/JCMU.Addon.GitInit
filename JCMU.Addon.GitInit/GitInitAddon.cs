@@ -9,10 +9,17 @@ public class GitInitAddon : IJcmuAddon
 {
     public async Task<Maybe<int>> ExecuteAsync(ActionContext context)
     {
-        var request = CommandBuilder.Create("git").WithArgument("init").InDirectory(context.TargetDirectory).Build();
-
-        var logger = context.HostServices.Logger;
+        var host = context.HostServices;
         var runner = new StatelessRunner();
+
+        var request = CommandBuilder.Create("git")
+            .WithArgument("init")
+            .InDirectory(context.TargetDirectory)
+            .Build();
+
+        // Use the new UI for a colored header!
+        host.UI.WriteLine("--- Initializing Git Repository ---", ConsoleColor.Cyan);
+
         return await runner.RunBufferedAsync(request)
             .BindAsync(result =>
             {
@@ -31,15 +38,19 @@ public class GitInitAddon : IJcmuAddon
             .TapAsync(
                 async success =>
                 {
-                    logger.LogInfo("Git initialized successfully.");
+                    // Green for the user, standard info for the telemetry log file
+                    host.UI.WriteLine("\n[SUCCESS] Git initialized successfully.", ConsoleColor.Green);
+                    host.Logger.LogInfo("Git initialized successfully.");
                     await Task.Delay(1500).ConfigureAwait(false);
                 },
                 async failure =>
                 {
-                    logger.LogError($"Git execution failed: {failure.Message}");
+                    // Red for the user, error block for the telemetry log file
+                    host.UI.WriteLine($"\n[FAILED] Git execution failed:\n{failure.Message}", ConsoleColor.Red);
+                    host.Logger.LogError($"Git execution failed: {failure.Message}");
                     await Task.Delay(3000).ConfigureAwait(false);
                 })
-            .WithValueAsync(() => 0)
+            .WithValueAsync(() => -1) // -1 ensures the console stays open until they press a key
             .ConfigureAwait(false);
     }
 }
